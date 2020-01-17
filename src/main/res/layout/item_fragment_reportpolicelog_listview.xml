@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/bulge_white_filletborder_bg_layer"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/device_list_name_bg"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/item_fragment_reportpolicelog_name_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="中兴大街--守敬路西借道左转抓拍"
+                android:textColor="@color/gray_two" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/item_fragment_tv1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="事件内容：" />
+
+            <TextView
+                android:id="@+id/item_fragment_reportpolicelog_content_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/item_fragment_tv1"
+                android:text="在线变离线" />
+
+            <TextView
+                android:id="@+id/item_fragment_reportpolicelog_currentstatus_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="在线"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="事件级别：" />
+
+            <TextView
+                android:id="@+id/item_fragment_reportpolicelog_grade_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="普通重要事件" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="告警时间：" />
+
+            <TextView
+                android:id="@+id/item_fragment_reportpolicelog_createdtime_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/item_fragment_tv1"
+                android:text="2020-01-12 17:52:27" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

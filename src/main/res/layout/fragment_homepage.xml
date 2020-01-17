@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- 顶部标题栏 -->
+        <Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:minHeight="?attr/actionBarSize">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="安管中心"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+        </Toolbar>
+
+        <!-- 重新加载的按钮 -->
+        <LinearLayout
+            android:id="@+id/fragment_homepage_reload_linearlayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/loadfail_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:text="哎呀呀，忽然没有数据啦" />
+
+                <Button
+                    android:id="@+id/fragment_homepage_reload_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:background="@drawable/reload_btn_bg"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="重新加载"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swiperefreshlayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!-- 主体内容 -->
+                <LinearLayout
+                    android:id="@+id/fragment_homepage_linearlayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/bulge_white_filletborder_bg_layer">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="15dp"
+                                android:layout_marginTop="15dp"
+                                android:background="@mipmap/monitoringpointstotalnumber_icon" />
+
+                            <TextView
+                                android:id="@+id/fragment_homepage_totalnumber_txt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:layout_toLeftOf="@id/tv1"
+                                android:text=""
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv1"
+                                style="@style/fragment_home_tacit_txt_style"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginRight="8dp"
+                                android:text="个" />
+
+                            <TextView
+                                style="@style/fragment_home_tacit_Monitortxt_style"
+                                android:layout_below="@id/fragment_homepage_totalnumber_txt"
+                                android:text="监测点总数" />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bulge_white_filletborder_bg_layer">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="15dp"
+                                android:layout_marginTop="15dp"
+                                android:background="@mipmap/monitoringpointstotalnumber_icon" />
+
+                            <TextView
+                                android:id="@+id/fragment_homepage_hostnumber_txt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:layout_toLeftOf="@id/tv2"
+                                android:text=""
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv2"
+                                style="@style/fragment_home_tacit_txt_style"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginRight="8dp"
+                                android:text="个" />
+
+                            <TextView
+                                style="@style/fragment_home_tacit_Monitortxt_style"
+                                android:layout_below="@id/fragment_homepage_hostnumber_txt"
+                                android:text="主监测点数量" />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bulge_white_filletborder_bg_layer">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="15dp"
+                                android:layout_marginTop="15dp"
+                                android:background="@mipmap/monitoringpointstotalnumber_icon" />
+
+                            <TextView
+                                android:id="@+id/fragment_homepage_hostonlinenumber_txt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:layout_toLeftOf="@id/tv3"
+                                android:text=""
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv3"
+                                style="@style/fragment_home_tacit_txt_style"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginRight="8dp"
+                                android:text="个" />
+
+                            <TextView
+                                style="@style/fragment_home_tacit_Monitortxt_style"
+                                android:layout_below="@id/fragment_homepage_hostonlinenumber_txt"
+                                android:text="主监测点在线数" />
+
+                        </RelativeLayout>
+
+
+                    </LinearLayout>
+
+                    <!-- ===========================第二行列表=========================== -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/bulge_white_filletborder_bg_layer">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="15dp"
+                                android:layout_marginTop="15dp"
+                                android:background="@mipmap/monitoringpointstotalnumber_icon" />
+
+                            <TextView
+                                android:id="@+id/fragment_homepage_hostofflinenumber_txt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:layout_toLeftOf="@id/tv4"
+                                android:text=""
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv4"
+                                style="@style/fragment_home_tacit_txt_style"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginRight="8dp"
+                                android:text="个" />
+
+                            <TextView
+                                style="@style/fragment_home_tacit_Monitortxt_style"
+                                android:layout_below="@id/fragment_homepage_hostofflinenumber_txt"
+                                android:text="主监测点离线数" />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/fragment_homepage_warning_rl"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bulge_white_filletborder_bg_layer">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="15dp"
+                                android:layout_marginTop="15dp"
+                                android:background="@mipmap/monitoringpointstotalnumber_icon" />
+
+                            <TextView
+                                android:id="@+id/fragment_homepage_warningnumber_txt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:layout_toLeftOf="@id/tv5"
+                                android:text=""
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv5"
+                                style="@style/fragment_home_tacit_txt_style"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginRight="8dp"
+                                android:text="个" />
+
+                            <TextView
+                                style="@style/fragment_home_tacit_Monitortxt_style"
+                                android:layout_below="@id/fragment_homepage_warningnumber_txt"
+                                android:text="警告数" />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bulge_white_filletborder_bg_layer">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="15dp"
+                                android:layout_marginTop="15dp"
+                                android:background="@mipmap/monitoringpointstotalnumber_icon" />
+
+                            <TextView
+                                android:id="@+id/fragment_homepage_hostonlineratenumber_txt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:layout_toLeftOf="@id/tv6"
+                                android:text=""
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv6"
+                                style="@style/fragment_home_tacit_txt_style"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginRight="8dp"
+                                android:text="%" />
+
+                            <TextView
+                                style="@style/fragment_home_tacit_Monitortxt_style"
+                                android:layout_below="@id/fragment_homepage_hostonlineratenumber_txt"
+                                android:text="主监测点在线率" />
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                    <!-- echarts 图展示 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/bulge_white_filletborder_bg_layer"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:paddingBottom="10dp">
+
+                            <Button
+                                android:id="@+id/fragment_homepage_onlinerate_btn"
+                                android:layout_width="0dp"
+                                android:layout_height="30dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/fragment_homepage_onlinerate_btn_pressdown_bg"
+                                android:text="分类统计"
+                                android:textColor="@color/white" />
+
+                            <Button
+                                android:id="@+id/fragment_homepage_statistics_btn"
+                                android:layout_width="0dp"
+                                android:layout_height="30dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/fragment_homepage_statistics_btn_normal_bg"
+                                android:text="总体在线率"
+                                android:textColor="@color/colorPrimary" />
+
+                        </LinearLayout>
+
+                        <FrameLayout
+                            android:id="@+id/togglepages_framelayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"></FrameLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script type="text/javascript" src="./echarts.min.js"></script>
+		<script type="text/javascript" src="./jquery.min.js"></script>
+	</head>
+	<body>
+		<div id="chart"></div>
+		<script type="text/javascript">
+			var dianNum = 300;
+			function doCreateChart(statuses, times, starTime, endTime) {
+				alert("来自客户端的信息：" + starTime);
+				doPointsInfoChart(statuses, times, starTime, endTime);
+				//doPointsInfoChart(["1","0","1","0","0"], ["2020-01-15 16:31:24","2020-01-17 12:41:12.0","2020-01-17 13:44:44.0","2020-01-17 15:52:18.0","2020-01-17 16:31:24"], "2020-01-15 16:31:24", "2020-01-17 16:31:24");
+			}
+
+			function doPointsInfoChart(statuses, times, starTime, endTime) {
+				starTime = data_transform(starTime);
+				endTime = data_transform(endTime);
+				var chart = document.getElementById("chart");
+				var times = times; //response的时间序列
+				var statuses = statuses; //reponse的值序列
+				var t0 = times[0];
+				var startTimeRes = new Date(t0);
+				var interval = (endTime.getTime() - starTime.getTime()) / dianNum;
+				var xDateTime = TimeRange(startTimeRes, endTime, dianNum); //x轴上的datetime时间序列
+				var xData = getxDate(xDateTime);
+				var yData;
+				var tooltipTime = xDateTime.concat(); //在提示框中使用，修正过的时间数据
+
+				var lastStatus = statuses[0];
+				var currStauts = statuses[0];
+
+
+				yData = setStatus1(dianNum, statuses[0]);
+				var lastIndex = 0; //上次修改时的index
+				var currIndex = 0; //当前需要修改值得index
+				for (var i = 1; i < times.length; i++) {
+					var currStauts = statuses[i];
+					if (lastStatus != currStauts) {
+						//状态发生改变
+						console.log("lastStatus");
+						console.log(lastStatus);
+						currIndex = getXindex(new Date(times[i]), xDateTime);
+
+						if (currIndex <= lastIndex) {
+							//与上一个点重叠，下一个
+							currIndex = lastIndex + 1;
+						}
+						yData[currIndex] = currStauts;
+						tooltipTime[currIndex] = dateToStr(new Date(times[i]));
+						lastIndex = currIndex; //prepaire
+						lastStatus = currStauts; //prepaire
+					}
+				}
+				for (var i = 0; i < tooltipTime.length; i++) {
+					tooltipTime[i] = dateToStr(new Date(tooltipTime[i]));
+				}
+
+				chart.setAttribute("style", "width: 100%;height:250px;");
+
+				var myChart = echarts.init(document.getElementById('chart'));
+				var option = {
+					title: {
+						text: ''
+					},
+					tooltip: {
+						trigger: 'axis',
+						formatter: function(value, index) {
+							//[value[0].axisValueLabel
+							//console.log(value[0]);
+							var texts = [tooltipTime[value[0].dataIndex], (value[0].value == 1 ? '在线' : '离线')];
+							return texts.join(':');
+						}
+					},
+					toolbox: {
+						feature: {
+							saveAsImage: {}
+						}
+					},
+					xAxis: {
+						type: 'category',
+						data: xData,
+						axisLabel: {
+							show: true,
+							formatter: function(value, index) {
+								return value;
+							}
+						},
+						axisTick: {
+							alignWithLabel: true
+						}
+					},
+					yAxis: {
+						type: 'value',
+						axisLabel: {
+							formatter: function(value) {
+								var texts = [];
+								if (value == '0') {
+									texts.push('离线');
+								} else if (value == '1') {
+									texts.push('在线');
+								}
+								return texts;
+							}
+						},
+						axisTick: { //y轴刻度线
+							"show": false,
+							formatter: function(value, index) {
+								return value;
+							}
+						},
+						splitLine: {
+							show: false, //不显示分割线
+						},
+					},
+					dataZoom: [{
+						type: 'slider', //图表下方的伸缩条
+						show: true, //是否显示
+						start: 0,
+						end: 100,
+					}, {
+						type: 'inside', //鼠标滚轮
+						realtime: true,
+					}, ],
+					series: [{
+						type: 'line',
+						step: 'end',
+						symbol: 'none',
+						data: yData,
+					}, ]
+				};
+
+				myChart.setOption(option);
+			}
+
+			function data_transform(time) {
+				time = time.replace(/-/g, '/');
+				time = Date.parse(time);
+				time = new Date(time);
+				return time;
+			}
+
+			function TimeRange(startTimes, endTimes, amount) {
+				var s = startTimes.getTime();
+				var d = endTimes.getTime();
+				var interval = (d - s) / amount;
+
+				try {
+					var timeList = [];
+					for (var i = 0; i < amount; i++) {
+						timeList.push(new Date(s));
+						s = s + interval;
+					}
+					return timeList;
+				} catch (e) {
+					layer.msg(e, {
+						icon: 5
+					});
+				}
+			}
+
+			function getxDate(arrayXdt) {
+				var x = [];
+				for (var i = 0; i < arrayXdt.length; i++) {
+					x[i] = dateToStr(arrayXdt[i]).substring(11, 16);
+				}
+				return x;
+			}
+
+			//返回dateTime的字符串2019-12-03 18:23:20
+			function dateToStr(dateTime) {
+				var d = new Date(dateTime);
+				var Year = d.getFullYear();
+				var Month = checkTime(d.getMonth() + 1);
+				var Day = checkTime(d.getDate());
+				var Hours = checkTime(d.getHours());
+				var Minutes = checkTime(d.getMinutes());
+				var Seconds = checkTime(d.getSeconds());
+				return Year + "-" + Month + "-" + Day + " " + Hours + ":" + Minutes + ":" + Seconds;
+			}
+
+			function checkTime(i) {
+				if (i < 10) {
+					i = "0" + i.toString()
+				}
+				return i
+			}
+
+			function setStatus1(num, status) { //状态数组
+				var statusArray = [];
+				for (var i = 0; i < num; i++) {
+					statusArray.push(status);
+				}
+				return statusArray;
+			}
+
+			//根据给定的时间，找到一个xDatetime中找合适的点的index
+			function getXindex(dt, xDateTime) {
+				var index = 0;
+				for (var i = 0; i < xDateTime.length; i++) {
+					if (xDateTime[i].getTime() > dt.getTime()) {
+						index = i;
+						break;
+					}
+				}
+				return index;
+			}
+		</script>
+	</body>
+</html>
