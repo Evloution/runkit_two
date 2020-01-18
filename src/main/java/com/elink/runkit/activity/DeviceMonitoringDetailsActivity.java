@@ -2,7 +2,9 @@ package com.elink.runkit.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -65,17 +67,19 @@ public class DeviceMonitoringDetailsActivity extends AppCompatActivity {
     @BindView(R.id.devicedetails_onlinerate_txt)
     TextView devicedetailsOnlinerateTxt; // 在线率
     @BindView(R.id.from_linear)
-    LinearLayout fromLinear;
-    @BindView(R.id.end_date)
-    TextView endDate;
-    @BindView(R.id.end_linear)
-    LinearLayout endLinear;
-    @BindView(R.id.search_button)
-    Button searchButton;
-    @BindView(R.id.devicedetails_echart)
-    EchartView devicedetailsEchart;
+    LinearLayout fromLinear; // 开始时间的LinearLayout
     @BindView(R.id.from_date)
-    TextView fromDates;
+    TextView fromDates; // 开始时间
+    @BindView(R.id.end_date)
+    TextView endDate; // 结束时间
+    @BindView(R.id.end_linear)
+    LinearLayout endLinear; // 结束时间的LinearLayout
+    @BindView(R.id.search_button)
+    Button searchButton; // 查询按钮
+    @BindView(R.id.devicedetails_echart)
+    EchartView devicedetailsEchart; // 图表的信息
+    @BindView(R.id.reportpolicelog_swiperefreshlayout)
+    SwipeRefreshLayout reportpolicelogSwiperefreshlayout; // 下拉刷新
 
     private MonitoringPointDetailsPresenter monitoringPointDetailsPresenter = null; // 详情信息的Presenter
     private IncidentPresenter incidentPresenter = null; // 折线图表的Presenter
@@ -129,6 +133,17 @@ public class DeviceMonitoringDetailsActivity extends AppCompatActivity {
 
         initData();
         initIncidentData(0, startTime, endTime);
+
+        // 下拉刷新
+        reportpolicelogSwiperefreshlayout.setColorSchemeResources(R.color.colorPrimary, R.color.blueness_two, R.color.blueness_three);
+        reportpolicelogSwiperefreshlayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Log.e("刷新", "下拉刷新");
+                initData();
+                initIncidentData(0, startTime, endTime);
+            }
+        });
     }
 
     // 请求的是设备详情
@@ -144,12 +159,16 @@ public class DeviceMonitoringDetailsActivity extends AppCompatActivity {
                 devicedetailsWarngradeTxt.setText(String.valueOf(TBean.data.WARNGRADE));
                 devicedetailsMonitypeTxt.setText(TBean.data.MONITYPE);
                 devicedetailsMoniintervalTxt.setText(String.valueOf(TBean.data.MONIINTERVAL));
+                // 请求失败后取消刷新框
+                isCloseLoad();
             }
 
             @Override
             public void onError(String error) {
                 L.e("onError：" + error);
                 ToastUtil.show(DeviceMonitoringDetailsActivity.this, error);
+                // 请求失败后取消刷新框
+                isCloseLoad();
             }
 
             @Override
@@ -170,6 +189,8 @@ public class DeviceMonitoringDetailsActivity extends AppCompatActivity {
         incidentPresenter.attachView(new DataView<BaseBean<IncidentBean>>() {
             @Override
             public void onSuccess(final BaseBean<IncidentBean> TBean) {
+                activityDevicemonitoringReloadLinearlayout.setVisibility(View.GONE);
+                reportpolicelogSwiperefreshlayout.setVisibility(View.VISIBLE);
                 L.e("onSuccess成功：" + TBean.data.CONTENT);
                 if (code == 1) {
                     JSONArray statuses = JSONArray.parseArray(JSON.toJSONString(TBean.data.CONTENT));
@@ -187,12 +208,18 @@ public class DeviceMonitoringDetailsActivity extends AppCompatActivity {
                         refreshBarChart(statuses, times, startTime, endTime);
                     }
                 });
+                // 请求失败后取消刷新框
+                isCloseLoad();
             }
 
             @Override
             public void onError(String error) {
                 L.e("onError：" + error);
                 ToastUtil.show(DeviceMonitoringDetailsActivity.this, error);
+                activityDevicemonitoringReloadLinearlayout.setVisibility(View.VISIBLE);
+                reportpolicelogSwiperefreshlayout.setVisibility(View.GONE);
+                // 请求失败后取消刷新框
+                isCloseLoad();
             }
 
             @Override
@@ -223,6 +250,8 @@ public class DeviceMonitoringDetailsActivity extends AppCompatActivity {
                 this.finish();
                 break;
             case R.id.activity_devicemonitoring_reload_btn: // 重新加载按钮
+                initData();
+                initIncidentData(0, startTime, endTime);
                 break;
             case R.id.from_linear: // 选择开始时间
                 mDatePicker.show(fromDates.getText().toString());
@@ -281,6 +310,18 @@ public class DeviceMonitoringDetailsActivity extends AppCompatActivity {
         mTimerPicker.setScrollLoop(false);
         // 不允许滚动动画
         mTimerPicker.setCanShowAnim(false);
+    }
+
+    /**
+     * 判断应该关闭下拉刷新框还是上拉加载框
+     */
+    private void isCloseLoad() {
+        // 下拉刷新
+        //为了保险起见可以先判断当前是否在刷新中（旋转的小圈圈在旋转）....
+        if (reportpolicelogSwiperefreshlayout.isRefreshing()) {
+            //关闭刷新动画
+            reportpolicelogSwiperefreshlayout.setRefreshing(false);
+        }
     }
 
     // 获取今天的前三天
