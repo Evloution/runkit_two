@@ -297,13 +297,13 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
-            <com.elink.runkit.echart.EchartPointsInfoView
+            <com.elink.runkit.echart.EchartView
                 android:id="@+id/devicedetails_echart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:layout_gravity="center">
-            </com.elink.runkit.echart.EchartPointsInfoView>
+            </com.elink.runkit.echart.EchartView>
 
         </LinearLayout>
 

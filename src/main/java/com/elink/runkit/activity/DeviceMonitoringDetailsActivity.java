@@ -19,7 +19,7 @@ import com.elink.runkit.bean.IncidentBean;
 import com.elink.runkit.bean.MonitoringPointDetailsBean;
 import com.elink.runkit.datepicker.CustomDatePicker;
 import com.elink.runkit.datepicker.DateFormatUtils;
-import com.elink.runkit.echart.EchartPointsInfoView;
+import com.elink.runkit.echart.EchartView;
 import com.elink.runkit.log.L;
 import com.elink.runkit.presenter.IncidentPresenter;
 import com.elink.runkit.presenter.MonitoringPointDetailsPresenter;
@@ -27,6 +27,7 @@ import com.elink.runkit.util.ToastUtil;
 import com.elink.runkit.view.DataView;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import butterknife.BindView;
@@ -63,8 +64,6 @@ public class DeviceMonitoringDetailsActivity extends AppCompatActivity {
     TextView devicedetailsMoniintervalTxt; // 监测周期
     @BindView(R.id.devicedetails_onlinerate_txt)
     TextView devicedetailsOnlinerateTxt; // 在线率
-    @BindView(R.id.from_date)
-    TextView fromDate;
     @BindView(R.id.from_linear)
     LinearLayout fromLinear;
     @BindView(R.id.end_date)
@@ -74,7 +73,9 @@ public class DeviceMonitoringDetailsActivity extends AppCompatActivity {
     @BindView(R.id.search_button)
     Button searchButton;
     @BindView(R.id.devicedetails_echart)
-    EchartPointsInfoView devicedetailsEchart;
+    EchartView devicedetailsEchart;
+    @BindView(R.id.from_date)
+    TextView fromDates;
 
     private MonitoringPointDetailsPresenter monitoringPointDetailsPresenter = null; // 详情信息的Presenter
     private IncidentPresenter incidentPresenter = null; // 折线图表的Presenter
@@ -94,39 +95,44 @@ public class DeviceMonitoringDetailsActivity extends AppCompatActivity {
         L.e("monitoringID:" + monitoringId);
 
         initView();
-        initData();
-        initIncidentData();
     }
 
     private void initView() {
-        monitoringPointDetailsPresenter = new MonitoringPointDetailsPresenter(this);
-        incidentPresenter = new IncidentPresenter(this);
-
         // 给开始时间赋初始值为本月的第一天
-        SimpleDateFormat simpleDateFrom = new SimpleDateFormat("yyyy-MM");
+        /*SimpleDateFormat simpleDateFrom = new SimpleDateFormat("yyyy-MM");
         Date fromdate = new Date(System.currentTimeMillis());
-        fromDate.setText("2020-01-15");
-        //fromDate.setText(simpleDateFrom.format(fromdate) + "-01");
+        fromDate.setText(simpleDateFrom.format(fromdate) + "-01");*/
+
+        // 给开始时间赋初始值为本日的前3天
+        L.e("getCurrentDate:" + getBeforeTime());
+        fromDates.setText(getBeforeTime());
+        initFromDatePicker();
 
         // 给结束时间赋值为今天
         SimpleDateFormat simpleDateEnd = new SimpleDateFormat("yyyy-MM-dd");
         Date enddate = new Date(System.currentTimeMillis());
         endDate.setText(simpleDateEnd.format(enddate));
+        initEndDatePicker();
 
         // 获取进入页面时当前的时间
         SimpleDateFormat simpleCurrentTime = new SimpleDateFormat("HH:mm:ss");
         Date currentDate = new Date(System.currentTimeMillis());
         currentTime = " " + simpleCurrentTime.format(currentDate);
 
-        startTime = fromDate.getText().toString() + currentTime;
+        startTime = fromDates.getText().toString() + currentTime;
         endTime = endDate.getText().toString() + currentTime;
-        initFromDatePicker();
-        initEndDatePicker();
+
+        monitoringPointDetailsPresenter = new MonitoringPointDetailsPresenter(this);
+        incidentPresenter = new IncidentPresenter(this);
+        monitoringPointDetailsPresenter.onCreate();
+        incidentPresenter.onCreate();
+
+        initData();
+        initIncidentData(0, startTime, endTime);
     }
 
     // 请求的是设备详情
     private void initData() {
-        monitoringPointDetailsPresenter.onCreate();
         monitoringPointDetailsPresenter.getPointByIdPresenter(monitoringId);
         monitoringPointDetailsPresenter.attachView(new DataView<BaseBean<MonitoringPointDetailsBean>>() {
             @Override
@@ -159,18 +165,23 @@ public class DeviceMonitoringDetailsActivity extends AppCompatActivity {
     }
 
     // 请求的是设备详情图表
-    private void initIncidentData() {
-        incidentPresenter.onCreate();
+    private void initIncidentData(final int code, final String startTime, final String endTime) {
         incidentPresenter.getIncidentPresenter(monitoringId, startTime, endTime);
         incidentPresenter.attachView(new DataView<BaseBean<IncidentBean>>() {
             @Override
             public void onSuccess(final BaseBean<IncidentBean> TBean) {
                 L.e("onSuccess成功：" + TBean.data.CONTENT);
+                if (code == 1) {
+                    JSONArray statuses = JSONArray.parseArray(JSON.toJSONString(TBean.data.CONTENT));
+                    JSONArray times = JSONArray.parseArray(JSON.toJSONString(TBean.data.Time));
+                    refreshBarChart(statuses, times, startTime, endTime);
+                }
                 devicedetailsEchart.setWebViewClient(new WebViewClient() {
                     @Override
                     public void onPageFinished(WebView view, String url) {
                         super.onPageFinished(view, url);
                         //最好在h5页面加载完毕后再加载数据，防止html的标签还未加载完成，不能正常显示
+                        L.e("0000000000000000000000000");
                         JSONArray statuses = JSONArray.parseArray(JSON.toJSONString(TBean.data.CONTENT));
                         JSONArray times = JSONArray.parseArray(JSON.toJSONString(TBean.data.Time));
                         refreshBarChart(statuses, times, startTime, endTime);
@@ -181,6 +192,7 @@ public class DeviceMonitoringDetailsActivity extends AppCompatActivity {
             @Override
             public void onError(String error) {
                 L.e("onError：" + error);
+                ToastUtil.show(DeviceMonitoringDetailsActivity.this, error);
             }
 
             @Override
@@ -201,7 +213,7 @@ public class DeviceMonitoringDetailsActivity extends AppCompatActivity {
         L.e("times:" + times + "");
         L.e("starTime:" + starTime + "");
         L.e("endTimes:" + endTimes + "");
-        devicedetailsEchart.refreshEchartsWithOption(statuses + "," + times + "," + "\"" + starTime + "\"" + "," + "\"" +  endTimes + "\"");
+        devicedetailsEchart.refreshBarEchartsWithOption(statuses + "," + times + "," + "\"" + starTime + "\"" + "," + "\"" + endTimes + "\"");
     }
 
     @OnClick({R.id.back_img, R.id.activity_devicemonitoring_reload_btn, R.id.from_linear, R.id.end_linear, R.id.search_button})
@@ -213,13 +225,16 @@ public class DeviceMonitoringDetailsActivity extends AppCompatActivity {
             case R.id.activity_devicemonitoring_reload_btn: // 重新加载按钮
                 break;
             case R.id.from_linear: // 选择开始时间
-                mDatePicker.show(fromDate.getText().toString());
+                mDatePicker.show(fromDates.getText().toString());
                 break;
             case R.id.end_linear: // 选择结束时间
                 mTimerPicker.show(endDate.getText().toString());
                 break;
             case R.id.search_button: // 查询按钮
-                L.e("开始时间：" + fromDate.getText().toString() + currentTime + "  结束时间：" + endDate.getText().toString() + currentTime);
+                L.e("开始时间：" + fromDates.getText().toString() + currentTime + "  结束时间：" + endDate.getText().toString() + currentTime);
+                startTime = fromDates.getText().toString() + currentTime;
+                endTime = endDate.getText().toString() + currentTime;
+                initIncidentData(1, startTime, endTime);
                 break;
         }
     }
@@ -228,13 +243,11 @@ public class DeviceMonitoringDetailsActivity extends AppCompatActivity {
         long beginTimestamp = DateFormatUtils.str2Long("2009-05-01", false);
         long endTimestamp = System.currentTimeMillis();
 
-        fromDate.setText(DateFormatUtils.long2Str(endTimestamp, false));
-
         // 通过时间戳初始化日期，毫秒级别
         mDatePicker = new CustomDatePicker(this, new CustomDatePicker.Callback() {
             @Override
             public void onTimeSelected(long timestamp) {
-                fromDate.setText(DateFormatUtils.long2Str(timestamp, false));
+                fromDates.setText(DateFormatUtils.long2Str(timestamp, false));
             }
         }, beginTimestamp, endTimestamp);
         // 不允许点击屏幕或物理返回键关闭
@@ -268,5 +281,14 @@ public class DeviceMonitoringDetailsActivity extends AppCompatActivity {
         mTimerPicker.setScrollLoop(false);
         // 不允许滚动动画
         mTimerPicker.setCanShowAnim(false);
+    }
+
+    // 获取今天的前三天
+    private String getBeforeTime() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, -3); //向前走一天
+        Date date = calendar.getTime();
+        SimpleDateFormat dft = new SimpleDateFormat("yyyy-MM-dd");
+        return dft.format(date);
     }
 }
