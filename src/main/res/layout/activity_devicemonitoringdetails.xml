@@ -99,66 +99,79 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/devicemonitoring_tv1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="名称：" />
-
-                    <TextView
                         android:id="@+id/devicedetails_name_txt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/devicemonitoring_tv1"
-                        android:text="郭守敬大道与兴达路 终端" />
+                        android:text="郭守敬大道与兴达路 终端"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/devicedetails_monipause_txt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:text="主要监测点" />
+                        android:text="正在监测"
+                        android:textSize="16sp" />
 
                 </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1">
+                        android:layout_weight="2"
+                        android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/devicedetails_primary_txt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
-                            android:text="是否监测：" />
+                            android:text="主要监测点"
+                            android:textSize="16sp" />
 
-                        <TextView
-                            android:id="@+id/devicedetails_monipause_txt"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="正在监测" />
+                            android:layout_marginTop="5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:text="告警级别：" />
+
+                            <TextView
+                                android:id="@+id/devicedetails_warngrade_txt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="4"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:text="状态：" />
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center">
 
                         <TextView
                             android:id="@+id/devicedetails_status_txt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="在线" />
+                            android:text="在线"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 
@@ -167,25 +180,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:text="告警级别：" />
-
-                    <TextView
-                        android:id="@+id/devicedetails_warngrade_txt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="4" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
                     <LinearLayout
@@ -202,7 +197,8 @@
                             android:id="@+id/devicedetails_monitype_txt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="ping" />
+                            android:text="ping"
+                            android:textSize="16sp" />
 
                     </LinearLayout>
 
@@ -221,7 +217,10 @@
                             android:id="@+id/devicedetails_moniinterval_txt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="3600" />
+                            android:text="3600"
+                            android:textColor="@color/limegreen"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 
@@ -230,84 +229,126 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
                         android:text="在线率：" />
 
                     <TextView
                         android:id="@+id/devicedetails_onlinerate_txt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0.04%" />
+                        android:text="0.04"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="%" />
 
                 </LinearLayout>
 
-
                 <LinearLayout
                     android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="30dp"
+                    android:background="@color/grays1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="5dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@color/colorPrimary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="在/离线折线统计图" />
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal"
                     android:paddingTop="10dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="日期：" />
-
                     <LinearLayout
-                        android:id="@+id/from_linear"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/from_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="开始日期" />
+                            android:text="日期："
+                            android:textSize="16sp" />
 
-                    </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/from_linear"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="  ~  " />
+                            <TextView
+                                android:id="@+id/from_date"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="开始日期"
+                                android:textSize="16sp" />
 
-                    <LinearLayout
-                        android:id="@+id/end_linear"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        </LinearLayout>
 
                         <TextView
-                            android:id="@+id/end_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="结束日期" />
+                            android:text="  ~  " />
+
+                        <LinearLayout
+                            android:id="@+id/end_linear"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/end_date"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="结束日期"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
+
+                        <!-- 这个作用是为了给按钮撑高度，也是固定高度 -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp" />
 
                     </LinearLayout>
 
                     <Button
                         android:id="@+id/search_button"
                         android:layout_width="wrap_content"
-                        android:layout_height="25dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentRight="true"
                         android:background="@drawable/reload_btn_bg"
                         android:text="查询"
                         android:textColor="@color/white"
                         android:textSize="14sp" />
-                </LinearLayout>
+
+                </RelativeLayout>
 
                 <com.elink.runkit.echart.EchartView
                     android:id="@+id/devicedetails_echart"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="20dp"></com.elink.runkit.echart.EchartView>
+                    android:layout_marginTop="10dp"></com.elink.runkit.echart.EchartView>
 
             </LinearLayout>
 

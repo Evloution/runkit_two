@@ -80,6 +80,8 @@ public class DeviceMonitoringDetailsActivity extends AppCompatActivity {
     EchartView devicedetailsEchart; // 图表的信息
     @BindView(R.id.reportpolicelog_swiperefreshlayout)
     SwipeRefreshLayout reportpolicelogSwiperefreshlayout; // 下拉刷新
+    @BindView(R.id.devicedetails_primary_txt)
+    TextView devicedetailsPrimaryTxt; // 是否为主要监测点
 
     private MonitoringPointDetailsPresenter monitoringPointDetailsPresenter = null; // 详情信息的Presenter
     private IncidentPresenter incidentPresenter = null; // 折线图表的Presenter
@@ -88,6 +90,10 @@ public class DeviceMonitoringDetailsActivity extends AppCompatActivity {
     private String currentTime = null; // 当前时间
     private String startTime = null; // 开始时间
     private String endTime = null; // 结束时间
+
+    private String typeFase = null; // 状态为1 时显示的字
+    private int fontColor = 0; // 字的颜色
+    private int returnStatus = 0; // 返回的状态
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -152,11 +158,82 @@ public class DeviceMonitoringDetailsActivity extends AppCompatActivity {
         monitoringPointDetailsPresenter.attachView(new DataView<BaseBean<MonitoringPointDetailsBean>>() {
             @Override
             public void onSuccess(BaseBean<MonitoringPointDetailsBean> TBean) {
+                activityDevicemonitoringReloadLinearlayout.setVisibility(View.GONE);
+                reportpolicelogSwiperefreshlayout.setVisibility(View.VISIBLE);
                 L.e("onSuccess：" + TBean.data.NAME);
+                // 监测点名称
                 devicedetailsNameTxt.setText(TBean.data.NAME);
-                devicedetailsMonipauseTxt.setText(String.valueOf(TBean.data.MONIPAUSE));
-                devicedetailsStatusTxt.setText(String.valueOf(TBean.data.STATUS));
-                devicedetailsWarngradeTxt.setText(String.valueOf(TBean.data.WARNGRADE));
+                returnStatus = TBean.data.MONIPAUSE; // 监测点是否还在监测
+                if (returnStatus == 1) {
+                    typeFase = "暂停监测";
+                    fontColor = R.color.red;
+                } else if (returnStatus == 0) {
+                    typeFase = "正在监测";
+                    fontColor = R.color.limegreen;
+                }
+                devicedetailsMonipauseTxt.setText(typeFase);
+                devicedetailsMonipauseTxt.setTextColor(getResources().getColor(fontColor));
+                // 是否为主监测点
+                returnStatus = TBean.data.ISPRIMARY;
+                if (returnStatus == 1) {
+                    // 等于1 代表主要监测点
+                    typeFase = "主要监测点";
+                    fontColor = R.color.blueness_one;
+                } else if (returnStatus == 0) {
+                    // 等于0 代表辅助监测点
+                    typeFase = "辅助监测点";
+                    fontColor = R.color.blueness_three;
+                }
+                devicedetailsPrimaryTxt.setText(typeFase);
+                devicedetailsPrimaryTxt.setTextColor(getResources().getColor(fontColor));
+                // 监测点的告警级别
+                returnStatus = TBean.data.WARNGRADE;
+                if (returnStatus == 0) {
+                    typeFase = "0· 系统不可用";
+                    fontColor = R.color.red;
+                } else if (returnStatus == 1) {
+                    typeFase = "1· 需要紧急处理";
+                    fontColor = R.color.red;
+                } else if (returnStatus == 2) {
+                    typeFase = "2· 关键的事件";
+                    fontColor = R.color.red;
+                } else if (returnStatus == 3) {
+                    typeFase = "3· 错误事件";
+                    fontColor = R.color.red;
+                } else if (returnStatus == 4) {
+                    typeFase = "4· 警告事件";
+                    fontColor = R.color.red;
+                } else if (returnStatus == 5) {
+                    typeFase = "5· 普通重要事件";
+                    fontColor = R.color.gray_one;
+                } else if (returnStatus == 6) {
+                    typeFase = "6· 有用信息事件";
+                    fontColor = R.color.tomato;
+                } else if (returnStatus == 7) {
+                    typeFase = "7· 调试事件";
+                    fontColor = R.color.limegreen;
+                } else if (returnStatus == 8) {
+                    typeFase = "8· 未知事件";
+                    fontColor = R.color.gray_three;
+                }
+                devicedetailsWarngradeTxt.setText(typeFase);
+                devicedetailsWarngradeTxt.setTextColor(getResources().getColor(fontColor));
+                returnStatus = TBean.data.STATUS;
+                if (returnStatus == 0) {
+                    // 等于0 代表离线
+                    typeFase = "离线";
+                    fontColor = R.color.red;
+                } else if (returnStatus == 1) {
+                    // 等于1 代表在线
+                    typeFase = "在线";
+                    fontColor = R.color.limegreen;
+                } else if (returnStatus == -1) {
+                    // 等于-1 代表未知
+                    typeFase = "未知";
+                    fontColor = R.color.gray_three;
+                }
+                devicedetailsStatusTxt.setText(typeFase);
+                devicedetailsStatusTxt.setTextColor(getResources().getColor(fontColor));
                 devicedetailsMonitypeTxt.setText(TBean.data.MONITYPE);
                 devicedetailsMoniintervalTxt.setText(String.valueOf(TBean.data.MONIINTERVAL));
                 // 请求失败后取消刷新框
@@ -189,8 +266,6 @@ public class DeviceMonitoringDetailsActivity extends AppCompatActivity {
         incidentPresenter.attachView(new DataView<BaseBean<IncidentBean>>() {
             @Override
             public void onSuccess(final BaseBean<IncidentBean> TBean) {
-                activityDevicemonitoringReloadLinearlayout.setVisibility(View.GONE);
-                reportpolicelogSwiperefreshlayout.setVisibility(View.VISIBLE);
                 L.e("onSuccess成功：" + TBean.data.CONTENT);
                 if (code == 1) {
                     JSONArray statuses = JSONArray.parseArray(JSON.toJSONString(TBean.data.CONTENT));
