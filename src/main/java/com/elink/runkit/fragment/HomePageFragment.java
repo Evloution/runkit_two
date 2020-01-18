@@ -1,5 +1,6 @@
 package com.elink.runkit.fragment;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -64,7 +65,6 @@ public class HomePageFragment extends Fragment {
     @BindView(R.id.fragment_homepage_warning_rl)
     RelativeLayout fragmentHomepageWarningRl;
 
-
     private Fragment fragment = new Fragment();
     private EchartsDataBarFragment echartsDataBarFragment;
     private EchartsDataPieFragment echartsDataPieFragment;
@@ -73,6 +73,8 @@ public class HomePageFragment extends Fragment {
 
     private OnReportPoliceClick onReportPoliceClick = null;
     private PointsInfoPresenter pointsInfoPresenter = null;
+
+    private ProgressDialog progressDialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -154,12 +156,18 @@ public class HomePageFragment extends Fragment {
 
             @Override
             public void showProgress() {
-                L.e("onError：");
+                if (progressDialog != null && progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
+                progressDialog = ProgressDialog.show(getContext(),
+                        "", "正在获取...");
             }
 
             @Override
             public void hideProgress() {
-
+                if (progressDialog != null && progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
             }
         });
     }

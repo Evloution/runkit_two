@@ -44,6 +44,8 @@ public class PointsInfoPresenter implements Presenter {
     @Override
     public void attachView(View view) {
         dataView = (DataView<BaseBean<PointsInfoBean>>) view;
+        // 弹加载框框
+        //dataView.showProgress();
     }
 
     public void getPointsInfo() {
@@ -66,6 +68,8 @@ public class PointsInfoPresenter implements Presenter {
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
+                        // 关闭加载框
+                        //dataView.hideProgress();
                         L.e("Presenter onError：" + ErrorUtil.requestHandle(e));
                         dataView.onError(ErrorUtil.requestHandle(e));
                     }
@@ -73,6 +77,8 @@ public class PointsInfoPresenter implements Presenter {
                     @Override
                     public void onComplete() {
                         L.e("onComplete!");
+                        // 关闭加载框
+                        //dataView.hideProgress();
                         if (dataView != null) {
                             dataView.onSuccess(pointsInfoModel);
                             L.e("appVersion:" + pointsInfoModel);

@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -17,6 +18,7 @@ import com.elink.runkit.fragment.MyPageFragment;
 import com.elink.runkit.fragment.ReportPoliceFragment;
 import com.elink.runkit.fragment.ReportPoliceLogFragment;
 import com.elink.runkit.log.L;
+import com.elink.runkit.util.ToastUtil;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private FragmentManager fm;
     private FragmentTransaction ft;
     private BottomNavigationView navView;
+
+    private long exitTime = 0; // 点击返回按钮的时间
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -104,5 +108,22 @@ public class MainActivity extends AppCompatActivity {
         }
         fragment = targetFragment;
         return transaction;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if ((System.currentTimeMillis() - exitTime) > 2000) {
+                ToastUtil.show(MainActivity.this, "再按一次将退出程序");
+                exitTime = System.currentTimeMillis();
+            } else {
+                finish();
+            }
+            return false;
+        } else if (keyCode == KeyEvent.KEYCODE_HOME) {
+            moveTaskToBack(true);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

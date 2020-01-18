@@ -103,31 +103,31 @@ public class MonitoringPointAdapter extends BaseAdapter implements View.OnClickL
         // 监测点的告警级别
         returnStatus = monitoringPointBeans.get(position).WARNGRADE;
         if (returnStatus == 0) {
-            typeFase = "0:系统不可用";
+            typeFase = "0· 系统不可用";
             fontColor = R.color.red;
         } else if (returnStatus == 1) {
-            typeFase = "1：需要紧急处理";
+            typeFase = "1· 需要紧急处理";
             fontColor = R.color.red;
         } else if (returnStatus == 2) {
-            typeFase = "2：关键的事件";
+            typeFase = "2· 关键的事件";
             fontColor = R.color.red;
         } else if (returnStatus == 3) {
-            typeFase = "3：错误事件";
+            typeFase = "3· 错误事件";
             fontColor = R.color.red;
         } else if (returnStatus == 4) {
-            typeFase = "4：警告事件";
+            typeFase = "4· 警告事件";
             fontColor = R.color.red;
         } else if (returnStatus == 5) {
-            typeFase = "5：普通重要事件";
+            typeFase = "5· 普通重要事件";
             fontColor = R.color.gray_one;
         } else if (returnStatus == 6) {
-            typeFase = "6：有用信息事件";
+            typeFase = "6· 有用信息事件";
             fontColor = R.color.tomato;
         } else if (returnStatus == 7) {
-            typeFase = "7：调试事件";
+            typeFase = "7· 调试事件";
             fontColor = R.color.limegreen;
         } else if (returnStatus == 8) {
-            typeFase = "8：未知事件";
+            typeFase = "8· 未知事件";
             fontColor = R.color.gray_three;
         }
         viewHolder.itemDevicemonitoringDeviceWarngradeTxt.setText(typeFase);

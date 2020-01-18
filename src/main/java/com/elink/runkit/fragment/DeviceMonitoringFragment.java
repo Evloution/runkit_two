@@ -81,6 +81,7 @@ public class DeviceMonitoringFragment extends Fragment {
     private MonitoringPointAdapter monitoringPointAdapter = null;
     private List<MonitoringPointBean> monitoringPointList = null;
     private int page = 1;
+    private int searchcode = 0; // 是否要显示重新加载按钮
     private String pointName = "";
     private String pointIP = "";
 
@@ -98,7 +99,10 @@ public class DeviceMonitoringFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initView();
-        initData(pointName, pointIP, 0, "1");
+        page = 1;
+        pointName = "";
+        pointIP = "";
+        initData(pointName, pointIP, 0, Integer.toString(page));
     }
 
     private void initView() {
@@ -119,7 +123,10 @@ public class DeviceMonitoringFragment extends Fragment {
             @Override
             public void onRefresh() {
                 Log.e("刷新", "下拉刷新");
-                initData(pointName, pointIP, 1, "1");
+                page = 1;
+                pointName = "";
+                pointIP = "";
+                initData(pointName, pointIP, 1, Integer.toString(page));
             }
         });
 
@@ -150,6 +157,7 @@ public class DeviceMonitoringFragment extends Fragment {
         monitoringPointPresenter.attachView(new DataView<BaseDataListBean<MonitoringPointBean>>() {
             @Override
             public void onSuccess(BaseDataListBean<MonitoringPointBean> TBean) {
+                searchcode = 1; // 走这里说明第一次进入页面已经成功，不再需要显示重新加载按钮了
                 L.e("onSuccess：" + TBean.getData().size());
                 fragmentDevicemonitoringReloadLinearlayout.setVisibility(View.GONE);
                 swiperefreshlayout.setVisibility(View.VISIBLE);
@@ -196,8 +204,10 @@ public class DeviceMonitoringFragment extends Fragment {
             public void onError(String error) {
                 L.e("onError：" + error);
                 ToastUtil.show(getContext(), error);
-                fragmentDevicemonitoringReloadLinearlayout.setVisibility(View.VISIBLE);
-                swiperefreshlayout.setVisibility(View.GONE);
+                if (searchcode == 0) {
+                    fragmentDevicemonitoringReloadLinearlayout.setVisibility(View.VISIBLE);
+                    swiperefreshlayout.setVisibility(View.GONE);
+                }
                 // 请求失败后取消刷新框
                 isCloseLoad(code);
             }
@@ -332,7 +342,6 @@ public class DeviceMonitoringFragment extends Fragment {
                 }
                 break;
         }
-
     }
 
     @Override
