@@ -22,6 +22,7 @@ import com.elink.runkit.bean.PointsInfoBean;
 import com.elink.runkit.constants.Constants;
 import com.elink.runkit.log.L;
 import com.elink.runkit.presenter.PointsInfoPresenter;
+import com.elink.runkit.util.ToastUtil;
 import com.elink.runkit.view.DataView;
 
 import butterknife.BindView;
@@ -73,8 +74,8 @@ public class HomePageFragment extends Fragment {
 
     private OnReportPoliceClick onReportPoliceClick = null;
     private PointsInfoPresenter pointsInfoPresenter = null;
-
     private ProgressDialog progressDialog;
+    private int searchcode = 0; // 是否要显示重新加载按钮
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -126,6 +127,7 @@ public class HomePageFragment extends Fragment {
         pointsInfoPresenter.attachView(new DataView<BaseBean<PointsInfoBean>>() {
             @Override
             public void onSuccess(BaseBean<PointsInfoBean> TBean) {
+                searchcode = 1; // 走这里说明第一次进入页面已经成功，不再需要显示重新加载按钮了
                 L.e("成功" + TBean.data.PERCENT);
                 L.e("sssssssssssssssssssssssssssssssssssssss");
                 fragmentHomepageReloadLinearlayout.setVisibility(View.GONE);
@@ -148,8 +150,11 @@ public class HomePageFragment extends Fragment {
             @Override
             public void onError(String error) {
                 L.e("onError：" + error);
-                fragmentHomepageReloadLinearlayout.setVisibility(View.VISIBLE);
-                fragmentHomepageLinearlayout.setVisibility(View.GONE);
+                ToastUtil.show(getContext(), error);
+                if (searchcode == 0) {
+                    fragmentHomepageReloadLinearlayout.setVisibility(View.VISIBLE);
+                    fragmentHomepageLinearlayout.setVisibility(View.GONE);
+                }
                 // 请求成功后取消刷新框
                 isCloseLoad();
             }

@@ -19,6 +19,7 @@ import com.elink.runkit.bean.HistogramBean;
 import com.elink.runkit.echart.EchartView;
 import com.elink.runkit.log.L;
 import com.elink.runkit.presenter.HistogramPresenter;
+import com.elink.runkit.util.ToastUtil;
 import com.elink.runkit.view.DataView;
 
 import butterknife.BindView;
@@ -78,7 +79,6 @@ public class EchartsDataBarFragment extends Fragment {
             @Override
             public void onSuccess(final BaseBean<HistogramBean> TBean) {
                 L.e("成功：" + TBean.data);
-
                 eChart.setWebViewClient(new WebViewClient() {
                     @Override
                     public void onPageFinished(WebView view, String url) {
@@ -95,6 +95,7 @@ public class EchartsDataBarFragment extends Fragment {
             @Override
             public void onError(String error) {
                 L.e("onError：" + error);
+                ToastUtil.show(getContext(), error);
             }
 
             @Override

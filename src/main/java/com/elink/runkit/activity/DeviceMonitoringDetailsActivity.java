@@ -95,6 +95,9 @@ public class DeviceMonitoringDetailsActivity extends AppCompatActivity {
     private int fontColor = 0; // 字的颜色
     private int returnStatus = 0; // 返回的状态
 
+    private JSONArray statuses;
+    private JSONArray times;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -267,9 +270,9 @@ public class DeviceMonitoringDetailsActivity extends AppCompatActivity {
             @Override
             public void onSuccess(final BaseBean<IncidentBean> TBean) {
                 L.e("onSuccess成功：" + TBean.data.CONTENT);
-                if (code == 1) {
-                    JSONArray statuses = JSONArray.parseArray(JSON.toJSONString(TBean.data.CONTENT));
-                    JSONArray times = JSONArray.parseArray(JSON.toJSONString(TBean.data.Time));
+                statuses = JSONArray.parseArray(JSON.toJSONString(TBean.data.CONTENT));
+                times = JSONArray.parseArray(JSON.toJSONString(TBean.data.Time));
+                if (code == 1 || code == 0) {
                     refreshBarChart(statuses, times, startTime, endTime);
                 }
                 devicedetailsEchart.setWebViewClient(new WebViewClient() {
@@ -278,8 +281,6 @@ public class DeviceMonitoringDetailsActivity extends AppCompatActivity {
                         super.onPageFinished(view, url);
                         //最好在h5页面加载完毕后再加载数据，防止html的标签还未加载完成，不能正常显示
                         L.e("0000000000000000000000000");
-                        JSONArray statuses = JSONArray.parseArray(JSON.toJSONString(TBean.data.CONTENT));
-                        JSONArray times = JSONArray.parseArray(JSON.toJSONString(TBean.data.Time));
                         refreshBarChart(statuses, times, startTime, endTime);
                     }
                 });
