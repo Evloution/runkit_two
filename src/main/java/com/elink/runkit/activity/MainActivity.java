@@ -1,6 +1,7 @@
 package com.elink.runkit.activity;
 
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,6 +18,7 @@ import com.elink.runkit.fragment.MyPageFragment;
 import com.elink.runkit.fragment.ReportPoliceFragment;
 import com.elink.runkit.fragment.ReportPoliceLogFragment;
 import com.elink.runkit.log.L;
+import com.elink.runkit.util.FileUtil;
 import com.elink.runkit.util.ToastUtil;
 
 public class MainActivity extends AppCompatActivity {
@@ -90,6 +92,13 @@ public class MainActivity extends AppCompatActivity {
                 switchFragment(reportPoliceFragment);
             }
         });
+
+        String android_id = Settings.System.getString(
+                getContentResolver(), Settings.Secure.ANDROID_ID);
+        L.e("android_id:" + android_id);
+        // runkit  cache
+        L.e("getExternalCacheDir:" + getExternalCacheDir());
+        FileUtil.writeTxtToFile(android_id, "/sdcard/runkit/cache", "cache.txt");
     }
 
     /**

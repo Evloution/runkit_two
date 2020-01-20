@@ -97,9 +97,9 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="15dp"
-                                android:layout_marginTop="15dp"
-                                android:background="@mipmap/monitoringpointstotalnumber_icon" />
+                                android:layout_marginTop="7dp"
+                                android:layout_marginLeft="10dp"
+                                android:background="@mipmap/monitoringtotalnum_icon" />
 
                             <TextView
                                 android:id="@+id/fragment_homepage_totalnumber_txt"
@@ -135,9 +135,9 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="15dp"
-                                android:layout_marginTop="15dp"
-                                android:background="@mipmap/monitoringpointstotalnumber_icon" />
+                                android:layout_marginTop="7dp"
+                                android:layout_marginLeft="10dp"
+                                android:background="@mipmap/monitoring_mainnum_icon" />
 
                             <TextView
                                 android:id="@+id/fragment_homepage_hostnumber_txt"
@@ -173,9 +173,9 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="15dp"
-                                android:layout_marginTop="15dp"
-                                android:background="@mipmap/monitoringpointstotalnumber_icon" />
+                                android:layout_marginTop="7dp"
+                                android:layout_marginLeft="10dp"
+                                android:background="@mipmap/monitoring_online_icon" />
 
                             <TextView
                                 android:id="@+id/fragment_homepage_hostonlinenumber_txt"
@@ -220,9 +220,9 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="15dp"
-                                android:layout_marginTop="15dp"
-                                android:background="@mipmap/monitoringpointstotalnumber_icon" />
+                                android:layout_marginTop="7dp"
+                                android:layout_marginLeft="10dp"
+                                android:background="@mipmap/monitoring_offline_icon" />
 
                             <TextView
                                 android:id="@+id/fragment_homepage_hostofflinenumber_txt"
@@ -259,9 +259,9 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="15dp"
-                                android:layout_marginTop="15dp"
-                                android:background="@mipmap/monitoringpointstotalnumber_icon" />
+                                android:layout_marginTop="7dp"
+                                android:layout_marginLeft="10dp"
+                                android:background="@mipmap/monitoring_warningnum_icon" />
 
                             <TextView
                                 android:id="@+id/fragment_homepage_warningnumber_txt"
@@ -295,11 +295,11 @@
                             android:background="@drawable/bulge_white_filletborder_bg_layer">
 
                             <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="15dp"
-                                android:layout_marginTop="15dp"
-                                android:background="@mipmap/monitoringpointstotalnumber_icon" />
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_marginTop="7dp"
+                                android:layout_marginLeft="10dp"
+                                android:background="@mipmap/monitoring_onlinerate_icon" />
 
                             <TextView
                                 android:id="@+id/fragment_homepage_hostonlineratenumber_txt"
